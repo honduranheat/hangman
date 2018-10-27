@@ -3,7 +3,7 @@ html, body {
     padding: 0;
 }
 
-#myInput {
+#myInput { 
     display: flex;
     flex-direction: column;
 }
@@ -52,6 +52,11 @@ html, body {
 
 #letter {
     padding: 4px;
+}
+
+#lettersGuessed {
+    display: flex;
+    flex-direction: row;
 }
 
 .justify-center {
