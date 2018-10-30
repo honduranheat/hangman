@@ -10,13 +10,16 @@ window.onload = function() {
   let lives = 5;
   let words = ["nintendo", "playstation", "sega", "atari", "microsoft"];
   let guessed = [];
-  let wordArr = [];
-  let input = document.getElementById("myInput");
-  let underscore = "";
   let btnClick = document.querySelectorAll(".letterBtn");
+  let display = ``;
+  let displayLives = ``;
+  let displayGuesses = ``;
+  let displayWord = ``;
+  let displayDiv = ``;
+  let value = 0;
+  let match = 0;
 
   document.getElementById("btnStart").onclick = function start() {
-    //console.log('hit start');
     shuffle();
   };
 
@@ -38,88 +41,133 @@ window.onload = function() {
   }
 
   function startGame() {
-    let value = 0;
+    lives = 5;
+    guessed = [];
+    let lowerArr = [];
     let arr = [];
     let spaces = [];
     let word = words[value];
 
     for (let i = 0; i < word.length; i++) {
       spaces.push(" _ ");
-      //word = word.replace(" ", "");
       arr.push(word[i]);
     }
-    console.log(word);
+    // console.log(word);
+    // console.log(spaces);
+    // console.log(arr);
     getMarkup(arr, spaces, word, value);
   }
 
   function getMarkup(arr, spaces, word, value) {
-    let display;
-    let displayLives;
-    let displayGuesses;
-    let displayWord;
+    let displayDiv = ``;
+    let displayWord = ``;
+    let displayLives = ``;
+    let displayGuesses = ``;
+    let display =  displayDiv + displayLives + displayGuesses;
+    displayLives = `<p>Lives: ${lives}</p>`;
+    displayGuesses = `<p> Letters Guessed: ${guessed}</p>`;
 
-    displayWord += ``;
     for (let i = 0; i < spaces.length; i++) {
-      display += `<p id='letter'>${
-        spaces[i]}</p>`
+      displayWord += `<p class='letter row'>${spaces[i]}</p>`;
     }
-    // displayLives = `<p>Lives Remaining: ${lives} <br>`;
-    // displayGuesses = `<p>Guesses Left: ${guessed} <br>`;
 
-    // display = displayWord + displayLives + displayGuesses;
+  console.log(spaces);
 
-    document.getElementById("currentWord").innerHTML = displayWord;
-    game(arr, spaces, word, value, displayWord);
+    displayDiv = `<div id='displayDiv' class='row'>${displayWord}</div>`;
+    document.getElementById("display").innerHTML = display;
+     
+    game(arr, spaces, word, value, display);
   }
 
-  function game(arr, spaces, word, value, displayWord) {
-    let displayLives;
-    let displayGuesses;
+  function game(arr, spaces, displayWord, display, displayLives, displayGuesses, displayDiv) {
+    let isMatch;
+   
+    //displayLives = `<p>Lives: ${lives}</p>`;
 
     for (var i = 0; i < btnClick.length; i++) {
       btnClick[i].addEventListener("click", function(event) {
         let click = this.value;
-        let arrUp = arr.map(x => {
-          return x.toUpperCase();
-        });
 
-        //click = click.toLowerCase();
         guessed.push(click);
+
         for (let g = 0; g < guessed.length; g++) {
+          guessed.join("");
           displayGuesses = `<p> Letters Guessed: ${guessed}</p>`;
         }
 
-        // if (arr.indexOf(click) != 1) {
         for (let x = 0; x != arr.length; x++) {
           if (arr.indexOf(click) != -1) {
             if (click === arr[x]) {
+              let join;
+
               console.log("matching letter");
-              // console.log(click);
-              console.log(arr[x] === click);
               spaces[x] = arr[x];
               console.log(spaces);
               console.log(arr);
-              console.log(click);
-              displayWord = `<p id='letter'>${spaces}</p>`;
-              //guesses = `<p>${guessed}</p>`;
-            } else {
-              console.log("not a match");
-              // guessed.push(click);
-              console.log(guessed);
-              lives--;
+
+              isMatch = true;
+              join = spaces.join("  ");
+
+              displayWord = `<p id='letter' class='row'>${spaces}</p>`;
             }
+          } else {
+            console.log("no match");
+            isMatch = false;
+            console.log(isMatch);
+            
           }
         }
+
+        if (isMatch === false) {
+          console.log("not a match");
+          console.log(guessed);
+          lives--;
+          displayLives = `<p>Lives: ${lives}</p>`;
+          
+        }
+
+        if (lives === 0) {
+          userLose();
+        }
+
+        //for (let l = 0; l < spaces.length; l++) {
+        if (spaces === arr) {
+          userWin();
+        }
         //}
-        document.getElementById("currentWord").innerHTML = displayWord;
-        // document.getElementById("lettersGuessed").innerHTML = guesses;
-        // document.getElementById("currentWord").innerHTML = markup;
-        // document.getElementById("lettersGuessed").innerHTML = guesses;
+
+        displayDiv = `<div id='displayDiv' class='row'>${displayWord}</div>`;
+        display = displayDiv + displayLives + displayGuesses;
+        document.getElementById("display").innerHTML = display;
       });
     }
   }
 
-  // guesses() {
+  function setColor() {}
 
-  // }
+  function userLose() {
+    console.log("game over");
+    display = `<div id='lose'><p>You Lose!</p><div><button id='btnStart' class='justify-center'>Play Again?</button>`;
+    document.getElementById("restart").innerHTML = display;
+
+    document.getElementById("btnStart").onclick = function start() {
+      display = ``;
+      value++;
+      document.getElementById("restart").innerHTML = display;
+      startGame();
+    };
+  }
+
+  function userWin() {
+    display = `<div id='lose'><p>You Win!</p><div><button id='btnStart' class='justify-center'>Play Again?</button>`;
+    document.getElementById("restart").innerHTML = display;
+
+    document.getElementById("btnStart").onclick = function start() {
+      display = ``;
+      value++;
+
+      document.getElementById("restart").innerHTML = display;
+      startGame();
+    };
+  }
 };
