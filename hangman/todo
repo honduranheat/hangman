@@ -1,9 +1,0 @@
-
-☐ in loop that picks word from array, if user is correct in guessing, i++
-☐ 
-☐ 
-☐ 
-☐ 
-
-put each word to screen - if user wins -> word ++ to next
-if user loses -> restart and re shuffle
